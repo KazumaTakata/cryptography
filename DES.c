@@ -6,6 +6,7 @@
 void printBits(size_t const size, void const *const ptr);
 void readFileData(int *array, char *filename);
 int circlerBit(int c);
+int64_t combineInt(int c, int d);
 
 int main()
 {
@@ -27,7 +28,7 @@ int main()
     //     printf("1");
     // }
 
-    int array[56] = {0};
+    // int array[56] = {0};
 
     // readFileData(array, "pc-1.txt");
 
@@ -58,6 +59,36 @@ int main()
 
     int d1 = circlerBit(d0);
     printBits(sizeof(d1), &d1);
+
+    int64_t c1d1 = combineInt(c1, d1);
+
+    printBits(sizeof(c1d1), &c1d1);
+
+    int array[48] = {0};
+    readFileData(array, "pc-2.txt");
+
+    int64_t result = 0;
+    for (int i = 0; i < 48; i++)
+    {
+        result <<= 1;
+        if (c1d1 & ((int64_t)1 << (56 - array[i])))
+        {
+            printf("1");
+            result |= 1;
+        }
+        else
+        {
+            printf("0");
+        }
+    }
+}
+
+int64_t combineInt(int c, int d)
+{
+    int64_t result = (int64_t)c << 28;
+    result += d;
+
+    return result;
 }
 
 int circlerBit(int c)
