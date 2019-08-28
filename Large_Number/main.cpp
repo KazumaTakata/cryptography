@@ -4,20 +4,14 @@ using namespace std;
 
 int main()
 {
-    LargeNumber num("300");
+    LargeNumber num("333");
 
     LargeNumber num2("1100");
     LargeNumber num3 = num * num2;
 
-    num.printLargeNumber();
-    num2.printLargeNumber();
-    num3.printLargeNumber();
-
-    // num.printLargeNumber();
-    // printf("\n");
-    // num2.printLargeNumber();
-    // printf("\n");
-    // num3.printLargeNumber();
+    num.printInt32();
+    num2.printInt32();
+    num3.printInt32();
 
     return 0;
 }

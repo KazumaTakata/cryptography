@@ -33,8 +33,10 @@ public:
     void expand();
     void leftShift();
     LargeNumber newCopy();
+    void setCopy(LargeNumber &largenumber);
 
-    LargeNumber operator+(LargeNumber &Operand);
+    LargeNumber
+    operator+(LargeNumber &Operand);
     LargeNumber operator-(LargeNumber &Operand);
     LargeNumber operator*(LargeNumber &Operand);
     LargeNumber operator/(LargeNumber &Operand);

@@ -30,7 +30,7 @@ void LargeNumber::printInt32()
         sum += this->number[i] * (1 << (8 * i));
     }
 
-    printf("%d", sum);
+    printf("%d\n", sum);
 }
 
 void LargeNumber::debug()
@@ -135,35 +135,30 @@ LargeNumber LargeNumber::operator+(LargeNumber &Operand)
 
 void LargeNumber::operator+=(LargeNumber &Operand)
 {
-    int largeByteNum;
-    int smallByteNum;
-    LargeNumber *largenumber;
-
-    if (this->byteNum > Operand.byteNum)
+    LargeNumber newOperand = Operand.newCopy();
+    newOperand.debug();
+    if (this->byteNum < Operand.byteNum)
     {
-        largeByteNum = this->byteNum;
-        smallByteNum = Operand.byteNum;
-        largenumber = this;
+        LargeNumber tmp = this->newCopy();
+        this->setCopy(newOperand);
+        free(newOperand.number);
+        newOperand = tmp;
     }
-    else
-    {
-        largeByteNum = Operand.byteNum;
-        smallByteNum = this->byteNum;
-        largenumber = &Operand;
-    }
+    this->debug();
+    newOperand.debug();
 
     bool carry = false;
-    for (int i = 0; i < largeByteNum; i++)
+    for (int i = 0; i < this->byteNum; i++)
     {
 
         int sum;
-        if (i < smallByteNum)
+        if (i < newOperand.byteNum)
         {
-            sum = this->number[i] + Operand.number[i];
+            sum = this->number[i] + newOperand.number[i];
         }
         else
         {
-            sum = largenumber->number[i];
+            sum = this->number[i];
         }
 
         if (carry)
@@ -233,6 +228,14 @@ void LargeNumber::expand()
     memcpy(this->number, tmp, (this->byteNum - 1) * sizeof(unsigned char));
     this->number[this->byteNum - 1] = 0x01;
     free(tmp);
+}
+
+void LargeNumber::setCopy(LargeNumber &largenumber)
+{
+    free(this->number);
+    this->byteNum = largenumber.byteNum;
+    this->number = (unsigned char *)calloc(largenumber.byteNum, sizeof(unsigned char));
+    memcpy(this->number, largenumber.number, (largenumber.byteNum) * sizeof(unsigned char));
 }
 
 LargeNumber LargeNumber::newCopy()
