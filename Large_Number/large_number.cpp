@@ -106,6 +106,44 @@ bool LargeNumber::operator>(LargeNumber &Operand)
     return false;
 }
 
+bool LargeNumber::operator==(LargeNumber &Operand)
+{
+    if (this->byteNum != Operand.byteNum)
+    {
+        return false;
+    }
+    else
+    {
+        for (int i = 0; i < this->byteNum; i++)
+        {
+            if (this->number[i] != Operand.number[i])
+            {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+bool LargeNumber::operator!=(LargeNumber &Operand)
+{
+    if (this->byteNum != Operand.byteNum)
+    {
+        return true;
+    }
+    else
+    {
+        for (int i = 0; i < this->byteNum; i++)
+        {
+            if (this->number[i] != Operand.number[i])
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 bool LargeNumber::operator<(LargeNumber &Operand)
 {
     return Operand > *this;
@@ -169,7 +207,7 @@ LargeNumber LargeNumber::operator%(LargeNumber &Operand)
     divider.debug();
     Operand.debug();
     remain.debug();
-    while (remain > divider)
+    while (remain > divider || remain == divider)
     {
         divider.leftShift();
         divider.debug();

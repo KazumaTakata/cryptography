@@ -4,13 +4,12 @@ using namespace std;
 
 int main()
 {
-    LargeNumber num("30200");
+    LargeNumber num("42a3");
 
-    LargeNumber num2("10004328");
+    LargeNumber num2("783");
 
-    num.printInt32();
-    num2.printInt32();
-    LargeNumber num3 = num2 % num;
+    LargeNumber num3 = num.Euclid(num2);
+
     num.printInt32();
     num2.printInt32();
     num3.printInt32();

@@ -46,10 +46,15 @@ public:
     LargeNumber operator%(LargeNumber &Operand);
     bool operator<(LargeNumber &Operand);
     bool operator>(LargeNumber &Operand);
+    bool operator==(LargeNumber &Operand);
+    bool operator!=(LargeNumber &Operand);
 
-    LargeNumber operator<<(int i);
+    LargeNumber
+    operator<<(int i);
     void operator+=(LargeNumber &Operand);
     void operator-=(LargeNumber &Operand);
+
+    LargeNumber Euclid(LargeNumber &Operand);
 };
 
 #endif
