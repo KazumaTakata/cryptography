@@ -31,7 +31,10 @@ public:
     void initLargeNumberWithValue(string number);
     // allocate one more byte
     void expand();
+    void shrink();
+    void shrinkZero();
     void leftShift();
+    void rightShift();
     LargeNumber newCopy();
     void setCopy(LargeNumber &largenumber);
 
@@ -40,9 +43,13 @@ public:
     LargeNumber operator-(LargeNumber &Operand);
     LargeNumber operator*(LargeNumber &Operand);
     LargeNumber operator/(LargeNumber &Operand);
+    LargeNumber operator%(LargeNumber &Operand);
+    bool operator<(LargeNumber &Operand);
+    bool operator>(LargeNumber &Operand);
 
     LargeNumber operator<<(int i);
     void operator+=(LargeNumber &Operand);
+    void operator-=(LargeNumber &Operand);
 };
 
 #endif

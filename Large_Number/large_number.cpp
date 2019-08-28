@@ -74,6 +74,231 @@ LargeNumber::LargeNumber(string number)
 
 LargeNumber::LargeNumber(){};
 
+bool LargeNumber::operator>(LargeNumber &Operand)
+{
+    if (this->byteNum > Operand.byteNum)
+    {
+        return true;
+    }
+    else if (this->byteNum < Operand.byteNum)
+    {
+        return false;
+    }
+    else
+    {
+        for (int i = 0; i < this->byteNum; i++)
+        {
+            if (this->number[this->byteNum - i - 1] > Operand.number[this->byteNum - i - 1])
+            {
+                return true;
+            }
+            else if (this->number[this->byteNum - i - 1] < Operand.number[this->byteNum - i - 1])
+            {
+                return false;
+            }
+            else
+            {
+            }
+        }
+    }
+
+    // if equal
+    return false;
+}
+
+bool LargeNumber::operator<(LargeNumber &Operand)
+{
+    return Operand > *this;
+}
+
+LargeNumber LargeNumber::operator/(LargeNumber &Operand)
+{
+
+    string answer = "";
+    LargeNumber divider = Operand.newCopy();
+    LargeNumber remain = this->newCopy();
+    divider.debug();
+    Operand.debug();
+    remain.debug();
+    while (remain > divider)
+    {
+        divider.leftShift();
+        divider.debug();
+    }
+
+    do
+    {
+        divider.rightShift();
+        while (remain < divider && divider > Operand)
+        {
+            divider.rightShift();
+            divider.debug();
+            answer += '0';
+        }
+
+        answer += '1';
+        remain -= divider;
+        remain.debug();
+    } while (remain > Operand);
+
+    int size = (answer.size() - 1) / 4 + 1;
+
+    LargeNumber newlargenumber(size);
+    for (int i = 0; i < size; i++)
+    {
+        unsigned char sum = 0;
+        for (int j = 0; j < 8; j++)
+        {
+            if (answer[j + i * 8] == '1')
+            {
+                sum += 1 << j;
+            }
+        }
+        newlargenumber.number[i] = sum;
+    }
+
+    return newlargenumber;
+}
+
+LargeNumber LargeNumber::operator%(LargeNumber &Operand)
+{
+
+    string answer = "";
+    LargeNumber divider = Operand.newCopy();
+    LargeNumber remain = this->newCopy();
+    divider.debug();
+    Operand.debug();
+    remain.debug();
+    while (remain > divider)
+    {
+        divider.leftShift();
+        divider.debug();
+    }
+
+    do
+    {
+        divider.rightShift();
+        while (remain < divider && divider > Operand)
+        {
+            divider.rightShift();
+            divider.debug();
+            answer += '0';
+        }
+
+        answer += '1';
+        remain -= divider;
+        remain.debug();
+    } while (remain > Operand);
+
+    int size = (answer.size() - 1) / 4 + 1;
+
+    LargeNumber newlargenumber(size);
+    for (int i = 0; i < size; i++)
+    {
+        unsigned char sum = 0;
+        for (int j = 0; j < 8; j++)
+        {
+            if (answer[j + i * 8] == '1')
+            {
+                sum += 1 << j;
+            }
+        }
+        newlargenumber.number[i] = sum;
+    }
+
+    return remain;
+}
+
+LargeNumber LargeNumber::operator-(LargeNumber &Operand)
+{
+
+    LargeNumber newlargenumber(this->byteNum);
+
+    bool borrow = false;
+    for (int i = 0; i < this->byteNum; i++)
+    {
+
+        int diff;
+        if (i < Operand.byteNum)
+        {
+            diff = this->number[i] - Operand.number[i];
+        }
+        else
+        {
+            diff = this->number[i];
+        }
+
+        if (borrow)
+        {
+            diff--;
+        }
+
+        if (diff < 0)
+        {
+            borrow = true;
+            diff += 1 << 8;
+        }
+        else
+        {
+            borrow = false;
+        }
+
+        newlargenumber.number[i] = (unsigned char)diff;
+    }
+
+    newlargenumber.shrinkZero();
+
+    return newlargenumber;
+}
+
+void LargeNumber::operator-=(LargeNumber &Operand)
+{
+
+    bool borrow = false;
+    for (int i = 0; i < this->byteNum; i++)
+    {
+
+        int diff;
+        if (i < Operand.byteNum)
+        {
+            diff = this->number[i] - Operand.number[i];
+        }
+        else
+        {
+            diff = this->number[i];
+        }
+
+        if (borrow)
+        {
+            diff--;
+        }
+
+        if (diff < 0)
+        {
+            borrow = true;
+            diff += 1 << 8;
+        }
+        else
+        {
+            borrow = false;
+        }
+
+        this->number[i] = (unsigned char)diff;
+    }
+
+    this->shrinkZero();
+}
+
+void LargeNumber::shrinkZero()
+{
+    int index = this->byteNum - 1;
+    while (this->number[index] == 0 && index > 0)
+    {
+        this->shrink();
+        index--;
+    }
+}
+
 LargeNumber LargeNumber::operator+(LargeNumber &Operand)
 {
     int largeByteNum;
@@ -220,6 +445,42 @@ void LargeNumber::leftShift()
     }
 }
 
+void LargeNumber::rightShift()
+{
+    bool carry = false;
+    bool pastCarry = false;
+    for (int i = 0; i < this->byteNum; i++)
+    {
+
+        unsigned char tmp = this->number[this->byteNum - i - 1];
+
+        if (tmp & 1)
+        {
+            carry = true;
+        }
+        else
+        {
+            carry = false;
+        }
+
+        tmp = tmp >> 1;
+
+        if (pastCarry)
+        {
+            tmp += 1 << 7;
+        }
+
+        pastCarry = carry;
+
+        this->number[this->byteNum - i - 1] = tmp;
+    }
+
+    if (this->number[this->byteNum - 1] == 0)
+    {
+        this->shrink();
+    }
+}
+
 void LargeNumber::expand()
 {
     unsigned char *tmp = this->number;
@@ -227,6 +488,15 @@ void LargeNumber::expand()
     this->number = (unsigned char *)calloc(this->byteNum, sizeof(unsigned char));
     memcpy(this->number, tmp, (this->byteNum - 1) * sizeof(unsigned char));
     this->number[this->byteNum - 1] = 0x01;
+    free(tmp);
+}
+
+void LargeNumber::shrink()
+{
+    unsigned char *tmp = this->number;
+    this->byteNum--;
+    this->number = (unsigned char *)calloc(this->byteNum, sizeof(unsigned char));
+    memcpy(this->number, tmp, (this->byteNum) * sizeof(unsigned char));
     free(tmp);
 }
 
