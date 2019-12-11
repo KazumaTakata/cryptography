@@ -30,3 +30,51 @@ LargeNumber LargeNumber::Euclid(LargeNumber &Operand)
 
     return r0;
 }
+
+LargeNumber LargeNumber::randomLargeNumber(int byteSize)
+{
+
+    LargeNumber newlargenumber = LargeNumber(byteSize);
+    srand(time(NULL));
+
+    for (int j = 0; j < byteSize; j++)
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            double r = ((double)rand() / (RAND_MAX));
+            if (r > 0.5)
+            {
+                newlargenumber.number[j] += 1 << i;
+            }
+        }
+    }
+
+    return newlargenumber;
+}
+
+LargeNumber LargeNumber::ModularExponent(LargeNumber power, LargeNumber modulo)
+{
+    LargeNumber r = this->newCopy();
+    bool start = false;
+    for (int i = power.byteNum - 1; i >= 0; i--)
+    {
+        for (int j = 7; j > 0; j--)
+        {
+            if (power.number[i] & 1 << j)
+            {
+                start = true;
+                r = (r * r) % modulo;
+                r = r * *this;
+            }
+            else
+            {
+                if (start)
+                {
+                    r = (r * r) % modulo;
+                }
+            }
+        }
+    }
+
+    return r;
+}

@@ -22,6 +22,8 @@ public:
     LargeNumber();
     LargeNumber initLargeNumber(int bytenum);
 
+    static LargeNumber randomLargeNumber(int byteSize);
+
     void assignValue(string number);
     void initWithZero();
     void printLargeNumber();
@@ -55,6 +57,7 @@ public:
     void operator-=(LargeNumber &Operand);
 
     LargeNumber Euclid(LargeNumber &Operand);
+    LargeNumber ModularExponent(LargeNumber power, LargeNumber modulo);
 };
 
 #endif

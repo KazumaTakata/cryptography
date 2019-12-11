@@ -10,9 +10,12 @@ int main()
 
     LargeNumber num3 = num.Euclid(num2);
 
+    LargeNumber random = LargeNumber::randomLargeNumber(4);
+
     num.printInt32();
     num2.printInt32();
     num3.printInt32();
 
+   
     return 0;
 }
